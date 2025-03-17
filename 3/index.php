@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="bootstrap.min.css" />
-    <title>Задание_3</title>
+    <title>Задание 3</title>
   </head>
   <body>
 <?php
@@ -72,9 +72,9 @@ if ($errors) {
 
 // Сохранение в базу данных.
 
-$user = 'u68791'; 
-$pass = '1609462'; 
-$db = new PDO('mysql:host=localhost;dbname=u68791', $user, $pass,
+$user = 'u68918'; 
+$pass = '7758388'; 
+$db = new PDO('mysql:host=localhost;dbname=u68918', $user, $pass,
   [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); 
 
 $inQuery = implode(',', array_fill(0, count($language), '?'));
