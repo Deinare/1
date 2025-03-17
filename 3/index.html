@@ -2,106 +2,108 @@
 
 <html lang="ru">
 <head>
-    <title> Задание 3 </title>
     <link rel="stylesheet" href="style.css">
-  <script defer src="scr.js"></script>
+    <title> Задание 3 </title>
 </head>
-<body>
 
-<form action="/" method="POST">
-<div id="forma"></div>
-<h1 class="h11"> Форма</h1>
-<label>
-    ФИО:<br>
-    <input name="field-name" placeholder="Иванов Иван Иванович">
-</label>
-<label>
-    номер телефона:<br>
-    <input name="field-tel" type="tel" placeholder="Ваш номер телефона">
-</label>
+<body class="body">
 
-<label>
-    email:<br>
-    <input name="field-email" type="email" placeholder="Ваш email">
-</label>
-<label>
-    Выберите дату рождения:<br>
-    <input name="field-data" value="2000-01-01" type="date">
-</label>
-<br>
 
-    Пол:
-<br />
-<label>
-    <input type="radio" checked="checked" name="group-1" value="Значение1">
-    Муж
-</label>
-<label>
-    <input type="radio" name="group-1" value="Значение2">
-    Жен
-</label>
-<br>
-    Любимые языки программирования (можно выбрать несколько):
-<div style="display: flex; flex-direction: column;">
-    <label style="display: flex; margin-left: auto; margin-right: auto;">
-        <input type="checkbox" name="prog" value="C">
-        C
-    </label>
-    <label style="display: flex; margin-right: auto;">
-        <input type="checkbox" name="prog" value="C++">
-        C++
-    </label>
-    <label style="display: flex; margin-right: auto;">
-        <input type="checkbox" name="prog" value="JavaSript">
-        JavaScript
-    </label>
-    <label style="display: flex; margin-right: auto;">
-        <input type="checkbox" name="prog" value="PHP">
-        PHP
-    </label>
-    <label style="display: flex; margin-right: auto;">
-        <input type="checkbox" name="prog" value="Java">
-        Java
-    </label>
-    <label style="display: flex; margin-right: auto;">
-        <input type="checkbox" name="prog" value="Python">
-        Python
-    </label>
-    <label style="display: flex; margin-right: auto;">
-        <input type="checkbox" name="prog" value="Haskel">
-        Haskel
-    </label>
-    <label style="display: flex; margin-right: auto;">
-        <input type="checkbox" name="prog" value="Clojure">
-        Clojure
-    </label>
-    <label style="display: flex; margin-right: auto;">
-        <input type="checkbox" name="prog" value="Prolog">
-        Prolog
-    </label>
-    <label style="display: flex; margin-right: auto;">
-        <input type="checkbox" name="prog" value="Scala">
-        Scala
-    </label>
 
-</div>
+    <div class="block">
+        
 
-<label>
-    Ваша биография:<br>
-    <textarea name="field-name" placeholder="Чем увлекаетесь, где работаете и т.д."></textarea>
-</label>
-<br>
 
-    С контрактом:
-<br>
-<label>
-    <input type="checkbox" checked="checked" name="check-1">
-    Ознакомлен(а)
-</label>
-<br>
+        <form action="/" method="POST">
+            <div id="forma"></div>
+            <h1 class="h11"> Форма</h1>
+            <label>
+                ФИО:<br>
+                <input class="vvod" name="field-name" placeholder="Иванов Иван Иванович">
+            </label>
+            <label>
+                номер телефона:<br>
+                <input class="vvod" name="field-tel" type="tel" placeholder="Ваш номер телефона">
+            </label>
 
-<input type="submit" value="Сохранить">
+            <label>
+                email:<br>
+                <input class="vvod" name="field-email" type="email" placeholder="Ваш email">
+            </label>
+            <label>
+                Выберите дату рождения:<br>
+                <input name="field-data" value="2000-01-01" type="date">
+            </label><br>
 
-</form>
+            Пол:<br />
+            <label>
+                <input type="radio" checked="checked" name="group-1" value="Значение1">
+                Муж
+            </label>
+            <label>
+                <input type="radio" name="group-1" value="Значение2">
+                Жен
+            </label><br>
+                    <label>
+                        Ваш любимый язык программирования?: <br>
+                        <label>
+                            <input type="checkbox" name="prog" value="C">
+                            C
+                        </label><br>
+                        <label >
+                            <input type="checkbox" name="prog" value="C++">
+                            C++
+                        </label><br>
+                        <label >
+                            <input type="checkbox" name="prog" value="JavaSript">
+                            JavaScript
+                        </label><br>
+                        <label >
+                            <input type="checkbox" name="prog" value="PHP">
+                            PHP
+                        </label><br>
+                        <label >
+                            <input type="checkbox" name="prog" value="Java">
+                            Java
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="prog" value="Python">
+                            Python
+                        </label><br>
+                        <label >
+                            <input type="checkbox" name="prog" value="Haskel">
+                            Haskel
+                        </label><br>
+                        <label >
+                            <input type="checkbox" name="prog" value="Clojure">
+                            Clojure
+                        </label><br>
+                        <label >
+                            <input type="checkbox" name="prog" value="Prolog">
+                            Prolog
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="prog" value="Scala">
+                            Scala
+                        </label>
+                    </label><br>
+
+            <label>
+                Ваша биография:<br>
+                <textarea class="vvod" name="field-name" placeholder="Чем увлекаетесь, где работаете и т.д."></textarea>
+            </label><br>
+
+            С контрактом:<br>
+            <label>
+                <input type="checkbox" checked="checked" name="check-1">
+                Ознакомлен(а)
+            </label><br>
+
+            <input class="knopka" type="submit" value="Сохранить">
+
+        </form>
+    </div>
+
+
 </body>
 </html>
