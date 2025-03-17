@@ -1,0 +1,44 @@
+
+
+
+.block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.5em;
+}
+
+        .block > * {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            align-items: center;
+            background-color: #00FF7F;
+            border: solid;
+            border-color: #FFFF00;
+            max-width: 960px;
+            min-width: 960px;
+        }
+
+
+    form {
+        order: 5;
+        border: solid;
+        background-color: #264d8f;
+    }
+.h11 {
+    font-size: 2em;
+}
+.knopka{
+    width: 200px;
+    height: 70px;
+}
+textarea {
+    min-width: 500px;
+    min-height: 150px;
+}
+.vvod {
+    font-size: 1.1em;
+}
