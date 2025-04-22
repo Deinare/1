@@ -34,30 +34,30 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         return $res;
     }
 
-    if(!check_pole('fio', 'Это поле пустое', empty($fio)))
-        check_pole('fio', 'Неправильный формат: Имя Фамилия, только кириллица', !preg_match('/^([а-яё]+-?[а-яё]+)( [а-яё]+-?[а-яё]+){1,2}$/Diu', $fio));
-    if(!check_pole('number', 'Это поле пустое', empty($number)))
+    if(!check_pole('fio', 'заполните поле', empty($fio)))
+        check_pole('fio', 'допустимы только русские буквы', !preg_match('/^([а-яё]+-?[а-яё]+)( [а-яё]+-?[а-яё]+){1,2}$/Diu', $fio));
+    if(!check_pole('number', 'заполните поле', empty($number)))
     {
-        check_pole('number', 'Неправильный формат, должно быть 11 символов', strlen($number) != 11);
-        check_pole('number', 'Поле должно содержать только цифры', $number != preg_replace('/\D/', '', $number));
+        check_pole('number', 'поле должно содержать 11 цифр', strlen($number) != 11);
+        check_pole('number', 'другие символы, кроме цифр, не допускаются', $number != preg_replace('/\D/', '', $number));
     }
-    if(!check_pole('email', 'Это поле пустое', empty($email)))
+    if(!check_pole('email', 'заполните поле', empty($email)))
         check_pole('email', 'Неправильный формат: example@mail.ru', !preg_match('/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/', $email));
-    if(!check_pole('date', 'Это поле пустое', empty($date)))
-        check_pole('date', 'Неправильная дата', strtotime('now') < strtotime($date));
-    check_pole('radio', "Не выбран пол", empty($radio) || !preg_match('/^(M|W)$/', $radio));
-    if(!check_pole('bio', 'Это поле пустое', empty($bio)))
-        check_pole('bio', 'Слишком длинное поле, максимум символов - 65535', strlen($bio) > 65535);
+    if(!check_pole('date', 'заполните поле', empty($date)))
+        check_pole('date', 'дата не может превышать нынешнюю', strtotime('now') < strtotime($date));
+    check_pole('radio', "выберите пол", empty($radio) || !preg_match('/^(M|W)$/', $radio));
+    if(!check_pole('bio', 'заполните поле', empty($bio)))
+        check_pole('bio', 'Пожалуйста, сократите объем сообщения. Максимальное количество символов: 65535', strlen($bio) > 65535);
     check_pole('check', 'Не ознакомлены с контрактом', empty($check));
 
-	$user = 'u68791'; 
-	$pass = '1609462'; 
-	$db = new PDO('mysql:host=localhost;dbname=u68791', $user, $pass,
+	$user = 'u68918'; 
+	$pass = '7758388'; 
+	$db = new PDO('mysql:host=localhost;dbname=u68918', $user, $pass,
 	[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); 
 
     $inQuery = implode(',', array_fill(0, count($language), '?'));
 
-    if(!check_pole('language', 'Не выбран язык', empty($language)))
+    if(!check_pole('language', 'Выберите язык программирования', empty($language)))
     {
         try
         {
@@ -99,14 +99,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
             print('Error : ' . $e->getMessage());
             exit();
         }
-        setcookie('fio_value', $fio, time() + 24 * 60 * 60 * 365);
-        setcookie('number_value', $number, time() + 24 * 60 * 60 * 365);
-        setcookie('email_value', $email, time() + 24 * 60 * 60 * 365);
-        setcookie('date_value', $date, time() + 24 * 60 * 60 * 365);
-        setcookie('radio_value', $radio, time() + 24 * 60 * 60 * 365);
-        setcookie('language_value', implode(",", $language), time() + 24 * 60 * 60 * 365);
-        setcookie('bio_value', $bio, time() + 24 * 60 * 60 * 365);
-        setcookie('check_value', $check, time() + 24 * 60 * 60 * 365);
+        setcookie('fio_value', $fio, time() + 60 * 60 * 24 * 365);
+        setcookie('number_value', $number, time() + 60 * 60 * 24 * 365);
+        setcookie('email_value', $email, time() + 60 * 60 * 24 * 365);
+        setcookie('date_value', $date, time() + 60 * 60 * 24 * 365);
+        setcookie('radio_value', $radio, time() + 60 * 60 * 24 * 365);
+        setcookie('language_value', implode(",", $language), time() + 60 * 60 * 24 * 365);
+        setcookie('bio_value', $bio, time() +  60 * 60 * 24 * 365);
+        setcookie('check_value', $check, time() + 60*60*24 * 365);
 
         setcookie('save', '1');
     }
