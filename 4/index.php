@@ -14,7 +14,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
     $bio = isset($_POST['bio']) ? $_POST['bio'] : '';
     $check = isset($_POST['check']) ? $_POST['check'] : '';
     
-    function check_pole($cook, $str, $flag)
+    function pole_prov($cook, $str, $flag)
     {
         global $error;
         $res = false;
@@ -34,21 +34,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         return $res;
     }
 
-    if(!check_pole('fio', 'заполните поле', empty($fio)))
-        check_pole('fio', 'допустимы только русские буквы', !preg_match('/^([а-яё]+-?[а-яё]+)( [а-яё]+-?[а-яё]+){1,2}$/Diu', $fio));
-    if(!check_pole('number', 'заполните поле', empty($number)))
+    if(!pole_prov('fio', 'заполните поле', empty($fio)))
+        pole_prov('fio', 'допустимы только русские буквы', !preg_match('/^([а-яё]+-?[а-яё]+)( [а-яё]+-?[а-яё]+){1,2}$/Diu', $fio));
+    if(!pole_prov('number', 'заполните поле', empty($number)))
     {
-        check_pole('number', 'поле должно содержать 11 цифр', strlen($number) != 11);
-        check_pole('number', 'другие символы, кроме цифр, не допускаются', $number != preg_replace('/\D/', '', $number));
+        pole_prov('number', 'поле должно содержать 11 цифр', strlen($number) != 11);
+        pole_prov('number', 'другие символы, кроме цифр, не допускаются', $number != preg_replace('/\D/', '', $number));
     }
-    if(!check_pole('email', 'заполните поле', empty($email)))
-        check_pole('email', 'Пожалуйста, введите почту по образцу: example@mail.ru', !preg_match('/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/', $email));
-    if(!check_pole('date', 'заполните поле', empty($date)))
-        check_pole('date', 'дата не может превышать нынешнюю', strtotime('now') < strtotime($date));
-    check_pole('radio', "выберите пол", empty($radio) || !preg_match('/^(M|W)$/', $radio));
-    if(!check_pole('bio', 'заполните поле', empty($bio)))
-        check_pole('bio', 'Пожалуйста, сократите объем сообщения. Максимальное количество символов: 65535', strlen($bio) > 65535);
-    check_pole('check', 'Не ознакомлены с контрактом', empty($check));
+    if(!pole_prov('email', 'заполните поле', empty($email)))
+        pole_prov('email', 'Пожалуйста, введите почту по образцу: example@mail.ru', !preg_match('/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/', $email));
+    if(!pole_prov('date', 'заполните поле', empty($date)))
+        pole_prov('date', 'дата не может превышать нынешнюю', strtotime('now') < strtotime($date));
+    pole_prov('radio', "выберите пол", empty($radio) || !preg_match('/^(M|W)$/', $radio));
+    if(!pole_prov('bio', 'заполните поле', empty($bio)))
+        pole_prov('bio', 'Пожалуйста, сократите объем сообщения. Максимальное количество символов: 65535', strlen($bio) > 65535);
+    pole_prov('check', 'Не ознакомлены с контрактом', empty($check));
 
 	$user = 'u68918'; 
 	$pass = '7758388'; 
@@ -57,7 +57,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
     $inQuery = implode(',', array_fill(0, count($language), '?'));
 
-    if(!check_pole('language', 'Выберите язык программирования', empty($language)))
+    if(!pole_prov('language', 'Выберите язык программирования', empty($language)))
     {
         try
         {
@@ -72,7 +72,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
             print('Error : '.$e->getMessage());
             exit();
         }
-        check_pole('language', 'Неверно выбраны языки', $dbLangs->rowCount() != count($language));
+        pole_prov('language', 'Неверно выбраны языки', $dbLangs->rowCount() != count($language));
     }
     
     if (!$error)
@@ -106,7 +106,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         setcookie('radio_value', $radio, time() + 60 * 60 * 24 * 365);
         setcookie('language_value', implode(",", $language), time() + 60 * 60 * 24 * 365);
         setcookie('bio_value', $bio, time() +  60 * 60 * 24 * 365);
-        setcookie('check_value', $check, time() + 60*60*24 * 365);
+        setcookie('check_value', $check, time() + 60 * 60 * 24 * 365);
 
         setcookie('save', '1');
     }
@@ -127,7 +127,7 @@ else
     $messages = array();
     $values = array();
 
-    function check_pole($str, $pole)
+    function pole_prov($str, $pole)
     {
         global $errors, $messages, $values;
         $errors[$str] = !empty($pole);
@@ -145,14 +145,14 @@ else
     else
         $messages['success'] = '';
        
-    check_pole('fio', $fio);
-    check_pole('number', $number);
-    check_pole('email', $email);
-    check_pole('date', $date);
-    check_pole('radio', $radio);
-    check_pole('language', $language);
-    check_pole('bio', $bio);
-    check_pole('check', $check);
+    pole_prov('fio', $fio);
+    pole_prov('number', $number);
+    pole_prov('email', $email);
+    pole_prov('date', $date);
+    pole_prov('radio', $radio);
+    pole_prov('language', $language);
+    pole_prov('bio', $bio);
+    pole_prov('check', $check);
 
     $languages = explode(',', $values['language']);
 
