@@ -6,7 +6,7 @@ body {
   flex-direction: column;
   align-items: center;
   font-family: sans-serif;
-  background-color: #f9f9f9;
+  background-color: #AFEEEE;
 }
 
 .form {
@@ -42,13 +42,15 @@ textarea {
 
 .button {
   width: 100%;
-  height: 50px;
+  height: 80px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(20, 173, 56, 0.674);
-  color: #fff;
-  font-size: 18px;
+
+  background-color: #00BFFF;
+  color: #E0FFFF;
+  font-size: 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -57,18 +59,18 @@ textarea {
 }
 
 .button:hover {
-  background-color: rgba(20, 173, 56, 0.9);
+  background-color: DodgerBlue;
 }
 
 select {
   outline: none;
-  border: 3px solid black;
+  border: 4px solid black;
   border-radius: 5px;
 }
 
 .mess {
-  font-size: 21px;
-  color: green;
+  font-size: 20px;
+  color: #87CEFA;
   text-align: center;
   margin-bottom: 20px;
 }
