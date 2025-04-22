@@ -61,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
         try
         {
-            $dbLangs = $db->prepare("SELECT id, name FROM languages WHERE name IN ($inQuery)");
+            $dbLangs = $db->prepare("SELECT id, name FROM all_languages WHERE name IN ($inQuery)");
             foreach ($language as $key => $value)
                 $dbLangs->bindValue(($key+1), $value);
             $dbLangs->execute();
@@ -87,10 +87,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         setcookie('check_error', '', time() - 30 * 24 * 60 * 60);
         try
         {
-            $stmt = $db->prepare("INSERT INTO form_data (fio, number, email, dat, radio, bio) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt = $db->prepare("INSERT INTO dannye (fio, number, email, dat, radio, bio) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->execute([$fio, $number, $email, $date, $radio, $bio]);
             $fid = $db->lastInsertId();
-            $stmt1 = $db->prepare("INSERT INTO form_data_lang (id_form, id_lang) VALUES (?, ?)");
+            $stmt1 = $db->prepare("INSERT INTO form_dannd_l (id_form, id_lang) VALUES (?, ?)");
             foreach($languages as $row)
                 $stmt1->execute([$fid, $row['id']]);
         }
