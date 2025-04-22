@@ -42,7 +42,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         check_pole('number', 'другие символы, кроме цифр, не допускаются', $number != preg_replace('/\D/', '', $number));
     }
     if(!check_pole('email', 'заполните поле', empty($email)))
-        check_pole('email', 'Неправильный формат: example@mail.ru', !preg_match('/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/', $email));
+        check_pole('email', 'Пожалуйста, введите почту по образцу: example@mail.ru', !preg_match('/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/', $email));
     if(!check_pole('date', 'заполните поле', empty($date)))
         check_pole('date', 'дата не может превышать нынешнюю', strtotime('now') < strtotime($date));
     check_pole('radio', "выберите пол", empty($radio) || !preg_match('/^(M|W)$/', $radio));
