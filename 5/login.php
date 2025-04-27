@@ -1,6 +1,10 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 session_start();
+$user = 'u68918'; 
+	$pass = '7758388'; 
+	$db = new PDO('mysql:host=localhost;dbname=u68918', $user, $pass,
+	[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); 
 
 if (!empty($_SESSION['login'])) {
     header('Location: ./');
@@ -10,7 +14,7 @@ if (!empty($_SESSION['login'])) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require('database.php');
+    
 
     $login = trim($_POST['login'] ?? '');
     $password = md5($_POST['password'] ?? '');
