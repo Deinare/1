@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($fields['language'])) {
         try {
             $placeholders = implode(',', array_fill(0, count($fields['language']), '?'));
-            $stmt = $db->prepare("SELECT id FROM languages WHERE name IN ($placeholders)");
+            $stmt = $db->prepare("SELECT id FROM all_languages WHERE name IN ($placeholders)");
             foreach ($fields['language'] as $index => $lang) {
                 $stmt->bindValue($index + 1, $lang);
             }
@@ -75,13 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($isLoggedIn) {
             // Обновление данных пользователя
-            $stmt = $db->prepare("UPDATE form_data SET fio=?, number=?, email=?, dat=?, radio=?, bio=? WHERE user_id=?");
+            $stmt = $db->prepare("UPDATE dannye SET fio=?, number=?, email=?, dat=?, radio=?, bio=? WHERE user_id=?");
             $stmt->execute([$fields['fio'], $fields['number'], $fields['email'], $fields['date'], $fields['radio'], $fields['bio'], $_SESSION['user_id']]);
 
-            $stmt = $db->prepare("DELETE FROM form_data_lang WHERE id_form=?");
+            $stmt = $db->prepare("DELETE FROM form_dannd_l WHERE id_form=?");
             $stmt->execute([$_SESSION['form_id']]);
 
-            $insertLang = $db->prepare("INSERT INTO form_data_lang (id_form, id_lang) VALUES (?, ?)");
+            $insertLang = $db->prepare("INSERT INTO form_dannd_l (id_form, id_lang) VALUES (?, ?)");
             foreach ($languages as $lang) {
                 $insertLang->execute([$_SESSION['form_id'], $lang['id']]);
             }
@@ -98,12 +98,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ->execute([$login, $hashedPass]);
                 $userId = $db->lastInsertId();
 
-                $db->prepare("INSERT INTO form_data (user_id, fio, number, email, dat, radio, bio) VALUES (?, ?, ?, ?, ?, ?, ?)")
+                $db->prepare("INSERT INTO dannye (user_id, fio, number, email, dat, radio, bio) VALUES (?, ?, ?, ?, ?, ?, ?)")
                     ->execute([$userId, $fields['fio'], $fields['number'], $fields['email'], $fields['date'], $fields['radio'], $fields['bio']]);
 
                 $formId = $db->lastInsertId();
 
-                $insertLang = $db->prepare("INSERT INTO form_data_lang (id_form, id_lang) VALUES (?, ?)");
+                $insertLang = $db->prepare("INSERT INTO form_dannd_l (id_form, id_lang) VALUES (?, ?)");
                 foreach ($languages as $lang) {
                     $insertLang->execute([$formId, $lang['id']]);
                 }
@@ -152,14 +152,14 @@ if (!empty($_COOKIE['save'])) {
 // Если пользователь авторизован - подтянуть его данные
 if (!empty($_SESSION['login'])) {
     try {
-        $stmt = $db->prepare("SELECT * FROM form_data WHERE user_id=?");
+        $stmt = $db->prepare("SELECT * FROM dannye WHERE user_id=?");
         $stmt->execute([$_SESSION['user_id']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
             $_SESSION['form_id'] = $user['id'];
 
-            $stmt = $db->prepare("SELECT l.name FROM form_data_lang f JOIN languages l ON l.id = f.id_lang WHERE f.id_form=?");
+            $stmt = $db->prepare("SELECT l.name FROM form_dannd_l f JOIN all_languages l ON l.id = f.id_lang WHERE f.id_form=?");
             $stmt->execute([$user['id']]);
             $langs = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
