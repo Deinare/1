@@ -1,182 +1,168 @@
 <?php
-session_start();
-header("Content-Type: text/html; charset=UTF-8");
 
+header("Content-Type: text/html, charset=UTF-8");
 $error = false;
-$isLoggedIn = !empty($_SESSION['login']);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$user = 'u68918'; 
+$pass = '7758388'; 
+$db = new PDO('mysql:host=localhost;dbname=u68918', $user, $pass,
+[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); 
 
-    // Логаут
-    if (isset($_POST['logout_form'])) {
-        foreach (['fio', 'number', 'email', 'date', 'radio', 'language', 'bio', 'check'] as $field) {
-            setcookie($field . '_value', '', time() - 3600);
-        }
-        session_destroy();
-        header('Location: ./');
-        exit();
-    }
+$log = !empty($_SESSION['login']);
 
-    // Получение данных
-    $fields = [
-        'fio' => $_POST['fio'] ?? '',
-        'number' => $_POST['number'] ?? '',
-        'email' => $_POST['email'] ?? '',
-        'date' => $_POST['date'] ?? '',
-        'radio' => $_POST['radio'] ?? '',
-        'language' => $_POST['language'] ?? [],
-        'bio' => $_POST['bio'] ?? '',
-        'check' => $_POST['check'] ?? ''
-    ];
-
-    // Валидация
-    function setFieldCookie($name, $value, $isError = false, $errorMessage = '') {
-        if ($isError) {
-            setcookie("{$name}_error", $errorMessage, time() + 86400);
-            global $error;
+if($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+    $fio = isset($_POST['fio']) ? $_POST['fio'] : '';
+    $number = isset($_POST['number']) ? $_POST['number'] : '';
+    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $date = isset($_POST['date']) ? $_POST['date'] : '';
+    $radio = isset($_POST['radio']) ? $_POST['radio'] : '';
+    $language = isset($_POST['language']) ? $_POST['language'] : [];
+    $bio = isset($_POST['bio']) ? $_POST['bio'] : '';
+    $check = isset($_POST['check']) ? $_POST['check'] : '';
+    
+    function check_pole($cook, $str, $flag)
+    {
+        global $error;
+        $res = false;
+        $setval = isset($_POST[$cook]) ? $_POST[$cook] : '';
+        if($flag)
+        {
+            setcookie($cook.'_error', $str, time() + 24*60*60);
             $error = true;
+            $res = true;
         }
-        $saveValue = is_array($value) ? implode(',', $value) : $value;
-        setcookie("{$name}_value", $saveValue, time() + 30 * 24 * 60 * 60);
+        if($cook == 'language')
+        {
+            global $language;
+            $setval = ($language != '') ? implode(",", $language) : '';
+        }
+        setcookie($cook.'_value', $setval, time() + 30*24*60*60);
+        return $res;
     }
 
-    setFieldCookie('fio', $fields['fio'], empty($fields['fio']) || !preg_match('/^([а-яё]+-?[а-яё]+)( [а-яё]+-?[а-яё]+){1,2}$/iu', $fields['fio']), 'Некорректное ФИО');
-    setFieldCookie('number', $fields['number'], empty($fields['number']) || strlen($fields['number']) !== 11 || !ctype_digit($fields['number']), 'Некорректный телефон');
-    setFieldCookie('email', $fields['email'], empty($fields['email']) || !filter_var($fields['email'], FILTER_VALIDATE_EMAIL), 'Некорректный email');
-    setFieldCookie('date', $fields['date'], empty($fields['date']) || strtotime($fields['date']) > time(), 'Неверная дата');
-    setFieldCookie('radio', $fields['radio'], empty($fields['radio']) || !in_array($fields['radio'], ['M', 'W']), 'Не выбран пол');
-    setFieldCookie('bio', $fields['bio'], empty($fields['bio']) || strlen($fields['bio']) > 65535, 'Ошибка в биографии');
-    setFieldCookie('check', $fields['check'], empty($fields['check']), 'Не подтверждено соглашение');
-    setFieldCookie('language', $fields['language'], empty($fields['language']), 'Языки не выбраны');
-
-    // Проверка языков из базы
-    if (!empty($fields['language'])) {
-        try {
-            $placeholders = implode(',', array_fill(0, count($fields['language']), '?'));
-            $stmt = $db->prepare("SELECT id FROM all_languages WHERE name IN ($placeholders)");
-            foreach ($fields['language'] as $index => $lang) {
-                $stmt->bindValue($index + 1, $lang);
-            }
-            $stmt->execute();
-            if ($stmt->rowCount() !== count($fields['language'])) {
-                setFieldCookie('language', $fields['language'], true, 'Неверно выбраны языки');
-            }
-            $languages = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            die('Ошибка: ' . htmlspecialchars($e->getMessage()));
-        }
+    if(!check_pole('fio', 'Это поле пустое', empty($fio)))
+        check_pole('fio', 'Неправильный формат: Имя Фамилия, только кириллица', !preg_match('/^([а-яё]+-?[а-яё]+)( [а-яё]+-?[а-яё]+){1,2}$/Diu', $fio));
+    if(!check_pole('number', 'Это поле пустое', empty($number)))
+    {
+        check_pole('number', 'Неправильный формат, должно быть 11 символов', strlen($number) != 11);
+        check_pole('number', 'Поле должно содержать только цифры', $number != preg_replace('/\D/', '', $number));
     }
+    if(!check_pole('email', 'Это поле пустое', empty($email)))
+        check_pole('email', 'Неправильный формат: example@mail.ru', !preg_match('/^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/', $email));
+    if(!check_pole('date', 'Это поле пустое', empty($date)))
+        check_pole('date', 'Неправильная дата', strtotime('now') < strtotime($date));
+    check_pole('radio', "Не выбран пол", empty($radio) || !preg_match('/^(M|W)$/', $radio));
+    if(!check_pole('bio', 'Это поле пустое', empty($bio)))
+        check_pole('bio', 'Слишком длинное поле, максимум символов - 65535', strlen($bio) > 65535);
+    check_pole('check', 'Не ознакомлены с контрактом', empty($check));
 
-    if (!$error) {
-        foreach (['fio', 'number', 'email', 'date', 'radio', 'language', 'bio', 'check'] as $field) {
-            setcookie($field . '_error', '', time() - 3600);
+	$user = 'u68791'; 
+	$pass = '1609462'; 
+	$db = new PDO('mysql:host=localhost;dbname=u68791', $user, $pass,
+	[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); 
+
+    $inQuery = implode(',', array_fill(0, count($language), '?'));
+
+    if(!check_pole('language', 'Не выбран язык', empty($language)))
+    {
+        try
+        {
+            $dbLangs = $db->prepare("SELECT id, name FROM languages WHERE name IN ($inQuery)");
+            foreach ($language as $key => $value)
+                $dbLangs->bindValue(($key+1), $value);
+            $dbLangs->execute();
+            $languages = $dbLangs->fetchAll(PDO::FETCH_ASSOC);
         }
-
-        if ($isLoggedIn) {
-            // Обновление данных пользователя
-            $stmt = $db->prepare("UPDATE dannye SET fio=?, number=?, email=?, dat=?, radio=?, bio=? WHERE user_id=?");
-            $stmt->execute([$fields['fio'], $fields['number'], $fields['email'], $fields['date'], $fields['radio'], $fields['bio'], $_SESSION['user_id']]);
-
-            $stmt = $db->prepare("DELETE FROM form_dannd_l WHERE id_form=?");
-            $stmt->execute([$_SESSION['form_id']]);
-
-            $insertLang = $db->prepare("INSERT INTO form_dannd_l (id_form, id_lang) VALUES (?, ?)");
-            foreach ($languages as $lang) {
-                $insertLang->execute([$_SESSION['form_id'], $lang['id']]);
-            }
-        } else {
-            // Регистрация нового пользователя
-            $login = uniqid();
-            $password = uniqid();
-            setcookie('login', $login, time() + 365 * 24 * 3600);
-            setcookie('pass', $password, time() + 365 * 24 * 3600);
-
-            $hashedPass = md5($password);
-            try {
-                $db->prepare("INSERT INTO users (login, password) VALUES (?, ?)")
-                    ->execute([$login, $hashedPass]);
-                $userId = $db->lastInsertId();
-
-                $db->prepare("INSERT INTO dannye (user_id, fio, number, email, dat, radio, bio) VALUES (?, ?, ?, ?, ?, ?, ?)")
-                    ->execute([$userId, $fields['fio'], $fields['number'], $fields['email'], $fields['date'], $fields['radio'], $fields['bio']]);
-
-                $formId = $db->lastInsertId();
-
-                $insertLang = $db->prepare("INSERT INTO form_dannd_l (id_form, id_lang) VALUES (?, ?)");
-                foreach ($languages as $lang) {
-                    $insertLang->execute([$formId, $lang['id']]);
-                }
-            } catch (PDOException $e) {
-                die('Ошибка: ' . htmlspecialchars($e->getMessage()));
-            }
+        catch(PDOException $e)
+        {
+            print('Error : '.$e->getMessage());
+            exit();
         }
-
-        setcookie('save', '1', time() + 3600);
-        header('Location: index.php');
-        exit();
+        check_pole('language', 'Неверно выбраны языки', $dbLangs->rowCount() != count($language));
     }
+    
+    if (!$error)
+    {
+        setcookie('fio_error', '', time() - 30 * 24 * 60 * 60);
+        setcookie('number_error', '', time() - 30 * 24 * 60 * 60);
+        setcookie('email_error', '', time() - 30 * 24 * 60 * 60);
+        setcookie('date_error', '', time() - 30 * 24 * 60 * 60);
+        setcookie('radio_error', '', time() - 30 * 24 * 60 * 60);
+        setcookie('language_error', '', time() - 30 * 24 * 60 * 60);
+        setcookie('bio_error', '', time() - 30 * 24 * 60 * 60);
+        setcookie('check_error', '', time() - 30 * 24 * 60 * 60);
+        try
+        {
+            $stmt = $db->prepare("INSERT INTO form_data (fio, number, email, dat, radio, bio) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$fio, $number, $email, $date, $radio, $bio]);
+            $fid = $db->lastInsertId();
+            $stmt1 = $db->prepare("INSERT INTO form_data_lang (id_form, id_lang) VALUES (?, ?)");
+            foreach($languages as $row)
+                $stmt1->execute([$fid, $row['id']]);
+        }
+        catch(PDOException $e)
+        {
+            print('Error : ' . $e->getMessage());
+            exit();
+        }
+        setcookie('fio_value', $fio, time() + 24 * 60 * 60 * 365);
+        setcookie('number_value', $number, time() + 24 * 60 * 60 * 365);
+        setcookie('email_value', $email, time() + 24 * 60 * 60 * 365);
+        setcookie('date_value', $date, time() + 24 * 60 * 60 * 365);
+        setcookie('radio_value', $radio, time() + 24 * 60 * 60 * 365);
+        setcookie('language_value', implode(",", $language), time() + 24 * 60 * 60 * 365);
+        setcookie('bio_value', $bio, time() + 24 * 60 * 60 * 365);
+        setcookie('check_value', $check, time() + 24 * 60 * 60 * 365);
 
+        setcookie('save', '1');
+    }
     header('Location: index.php');
-    exit();
 }
+else
+{
+    $fio = !empty($_COOKIE['fio_error']) ? $_COOKIE['fio_error'] : '';
+    $number = !empty($_COOKIE['number_error']) ? $_COOKIE['number_error'] : '';
+    $email = !empty($_COOKIE['email_error']) ? $_COOKIE['email_error'] : '';
+    $date = !empty($_COOKIE['date_error']) ? $_COOKIE['date_error'] : '';
+    $radio = !empty($_COOKIE['radio_error']) ? $_COOKIE['radio_error'] : '';
+    $language = !empty($_COOKIE['language_error']) ? $_COOKIE['language_error'] : '';
+    $bio = !empty($_COOKIE['bio_error']) ? $_COOKIE['bio_error'] : '';
+    $check = !empty($_COOKIE['check_error']) ? $_COOKIE['check_error'] : '';
 
-// Обработка GET-запроса
-$messages = [];
-$values = [];
-$errors = [];
+    $errors = array();
+    $messages = array();
+    $values = array();
 
-foreach (['fio', 'number', 'email', 'date', 'radio', 'language', 'bio', 'check'] as $field) {
-    $values[$field] = $_COOKIE[$field . '_value'] ?? '';
-    if (!empty($_COOKIE[$field . '_error'])) {
-        $errors[$field] = true;
-        $messages[$field] = "<div class='error'>{$_COOKIE[$field . '_error']}</div>";
+    function check_pole($str, $pole)
+    {
+        global $errors, $messages, $values;
+        $errors[$str] = !empty($pole);
+        $messages[$str] = "<div class=\"error\">$pole</div>";
+        $values[$str] = empty($_COOKIE[$str.'_value']) ? '' : $_COOKIE[$str.'_value'];
+        setcookie($str.'_error', '', time() - 30 * 24 * 60 * 60);
+        return;
     }
-    setcookie($field . '_error', '', time() - 3600);
-}
 
-// Сообщение об успешном сохранении
-if (!empty($_COOKIE['save'])) {
-    setcookie('save', '', time() - 3600);
-    $messages['success'] = 'Спасибо, данные сохранены.';
-
-    if (!empty($_COOKIE['login']) && !empty($_COOKIE['pass'])) {
-        $messages['info'] = sprintf(
-            'Вы можете <a href="login.php">войти</a> под логином <strong>%s</strong> и паролем <strong>%s</strong> для редактирования.',
-            htmlspecialchars($_COOKIE['login']),
-            htmlspecialchars($_COOKIE['pass'])
-        );
+    if (!empty($_COOKIE['save']))
+    {
+        setcookie('save', '', 100000);
+        $messages['success'] = '<div class="message">Данные сохранены</div>';
     }
+    else
+        $messages['success'] = '';
+       
+    check_pole('fio', $fio);
+    check_pole('number', $number);
+    check_pole('email', $email);
+    check_pole('date', $date);
+    check_pole('radio', $radio);
+    check_pole('language', $language);
+    check_pole('bio', $bio);
+    check_pole('check', $check);
+
+    $languages = explode(',', $values['language']);
+
+    include('form.php');
 }
-
-// Если пользователь авторизован - подтянуть его данные
-if (!empty($_SESSION['login'])) {
-    try {
-        $stmt = $db->prepare("SELECT * FROM dannye WHERE user_id=?");
-        $stmt->execute([$_SESSION['user_id']]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user) {
-            $_SESSION['form_id'] = $user['id'];
-
-            $stmt = $db->prepare("SELECT l.name FROM form_dannd_l f JOIN all_languages l ON l.id = f.id_lang WHERE f.id_form=?");
-            $stmt->execute([$user['id']]);
-            $langs = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-            $values = [
-                'fio' => $user['fio'],
-                'number' => $user['number'],
-                'email' => $user['email'],
-                'date' => $user['dat'],
-                'radio' => $user['radio'],
-                'language' => implode(',', $langs),
-                'bio' => $user['bio'],
-                'check' => '1'
-            ];
-        }
-    } catch (PDOException $e) {
-        die('Ошибка: ' . htmlspecialchars($e->getMessage()));
-    }
-}
-
-include('form.php');
 ?>
