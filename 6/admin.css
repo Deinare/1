@@ -1,54 +1,104 @@
 body {
   background: linear-gradient(to right, #74ebd5, #acb6e5);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 50px 0;
+  padding: 40px 20px;
   margin: 0;
-}
-
-.math-card {
-  max-width: 700px;
-  margin: auto;
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-}
-
-.math-title {
-  text-align: center;
-  font-size: 26px;
-  font-weight: bold;
   color: #333;
-  margin-bottom: 20px;
+  font-size: 16px;
 }
 
-.math-content {
-  font-size: 18px;
+h1, h2 {
+  text-align: center;
   color: #222;
-  line-height: 1.6;
 }
 
-.math-content img {
-  display: block;
-  max-width: 100%;
-  margin: 20px auto;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+table {
+  width: 100%;
+  max-width: 1200px;
+  margin: 30px auto;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
-.highlight {
-  background-color: #fef3c7;
-  padding: 5px 8px;
-  border-radius: 5px;
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+thead th {
+  background-color: #007bff;
+  color: white;
   font-weight: bold;
 }
 
-.code-block {
-  background-color: #f4f4f4;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-family: monospace;
-  font-size: 15px;
-  overflow-x: auto;
-  margin-top: 15px;
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+.remove {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.remove:hover {
+  background-color: #a71d2a;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.table2 {
+  margin-top: 50px;
+}
+
+.table2 th {
+  background-color: #28a745;
+}
+
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  tr {
+    margin-bottom: 15px;
+  }
+
+  th {
+    background: #007bff;
+    color: white;
+    padding: 10px;
+  }
+
+  td {
+    padding: 10px;
+    border: none;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    font-weight: bold;
+  }
 }
