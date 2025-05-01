@@ -31,12 +31,12 @@ if (count($_POST)) {
     if (!preg_match('/^[0-9]+$/', $id))
       exit("Введите id");
 
-    $dbf = $db->prepare("SELECT * FROM form_data WHERE id = ?");
+    $dbf = $db->prepare("SELECT * FROM dannye WHERE id = ?");
     $dbf->execute([$id]);
     if ($dbf->rowCount() != 0) {
-      $dels = $db->prepare("DELETE FROM form_data WHERE id = ?");
+      $dels = $db->prepare("DELETE FROM dannye WHERE id = ?");
       $dels->execute([$id]);
-      $dels = $db->prepare("DELETE FROM form_data_lang WHERE id_form = ?");
+      $dels = $db->prepare("DELETE FROM form_dannd_l WHERE id_form = ?");
       if (!$dels->execute([$id]))
         exit("Ошибка удаления");
     } else
@@ -78,7 +78,7 @@ if (count($_POST)) {
       </thead>
       <tbody>
         <?php
-        $dbFD = $db->query("SELECT * FROM form_data ORDER BY id DESC");
+        $dbFD = $db->query("SELECT * FROM dannye ORDER BY id DESC");
         while ($row = $dbFD->fetch(PDO::FETCH_ASSOC)) {
           echo '<tr data-id=' . $row['id'] . '>
                   <td>' . $row['id'] . '</td>
@@ -89,8 +89,8 @@ if (count($_POST)) {
                   <td>' . (($row['radio'] == "M") ? "Мужской" : "Женский") . '</td>
                   <td>' . $row['bio'] . '</td>
                   <td>';
-          $dbl = $db->prepare("SELECT * FROM form_data_lang fd
-                                JOIN languages l ON l.id = fd.id_lang
+          $dbl = $db->prepare("SELECT * FROM form_dannd_l fd
+                                JOIN all_languages l ON l.id = fd.id_lang
                                 WHERE id_form = ?");
           $dbl->execute([$row['id']]);
           while ($row1 = $dbl->fetch(PDO::FETCH_ASSOC))
@@ -113,8 +113,8 @@ if (count($_POST)) {
     </tr>
     <tbody>
       <?php
-      $q = $db->query("SELECT l.id, l.name, count(fd.id_form) as count FROM languages l 
-                        LEFT JOIN form_data_lang fd ON fd.id_lang = l.id
+      $q = $db->query("SELECT l.id, l.name, count(fd.id_form) as count FROM all_languages l 
+                        LEFT JOIN form_dannd_l fd ON fd.id_lang = l.id
                         GROUP by l.id");
       while ($row = $q->fetch(PDO::FETCH_ASSOC))
         echo '<tr>
