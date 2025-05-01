@@ -1,0 +1,54 @@
+body {
+  background: linear-gradient(to right, #74ebd5, #acb6e5);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 50px 0;
+  margin: 0;
+}
+
+.math-card {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.math-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.math-content {
+  font-size: 18px;
+  color: #222;
+  line-height: 1.6;
+}
+
+.math-content img {
+  display: block;
+  max-width: 100%;
+  margin: 20px auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.highlight {
+  background-color: #fef3c7;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.code-block {
+  background-color: #f4f4f4;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 15px;
+  overflow-x: auto;
+  margin-top: 15px;
+}
