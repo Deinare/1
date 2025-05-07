@@ -1,5 +1,4 @@
 <?php
-
 $user = 'u68918'; 
 $pass = '7758388'; 
 $db = new PDO('mysql:host=localhost;dbname=u68918', $user, $pass,
@@ -11,9 +10,14 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
   $q->execute([$_SERVER['PHP_AUTH_USER'], md5($_SERVER['PHP_AUTH_PW'])]);
   $admin = $q->rowCount();
 }
+if (isset($_GET['logout'])) {
+    header('HTTP/1.1 401 Unauthorized');
+    header('Location: index.php');
+    exit();
+}
 
 if (!$admin) {
-  header('HTTP/1.1 401 Unanthorized');
+  header('HTTP/1.1 401 Unauthorized');
   header('WWW-Authenticate: Basic realm="My site"');
   print ('<h1>401 Требуется авторизация</h1>');
   exit();
@@ -22,7 +26,6 @@ if (!$admin) {
 print ('Вы успешно авторизовались и можете увидеть защищенные паролем данные.');
 
 session_start();
-
 if (count($_POST)) {
   $keyPost = key($_POST);
   if (empty($_SESSION['rem_but']) || $_SESSION['rem_but'] != $keyPost) {
@@ -45,7 +48,6 @@ if (count($_POST)) {
     $_SESSION['rem_but'] = $keyPost;
   }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -60,6 +62,10 @@ if (count($_POST)) {
 </head>
 
 <body>
+  <div class="logout-container">
+    <a href="admin.php?logout=1" class="logout-button">Выйти</a>
+  </div>
+
   <form method="post" action="">
     <table class="table1">
       <thead>
@@ -105,7 +111,6 @@ if (count($_POST)) {
     </table>
   </form>
 
-
   <table class="table2">
     <tr>
       <td>Язык программирования</td>
@@ -121,7 +126,6 @@ if (count($_POST)) {
           <td>' . $row['name'] . '</td>
           <td>' . $row['count'] . '</td>';
       ?>
-
     </tbody>
   </table>
 </body>
