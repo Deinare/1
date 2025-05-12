@@ -1,12 +1,9 @@
 <?php
-
-
-
 $user = 'u68918'; 
 $pass = '7758388'; 
 $db = new PDO('mysql:host=localhost;dbname=u68918', $user, $pass,
 [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); 
-// отправка браузеру кодировку
+
 header("Content-Type: text/html; charset=UTF-8");
 session_start();
 
@@ -14,8 +11,6 @@ $error = false;
 $log = !empty($_SESSION['login']);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	
-	
 	
     $fio = isset($_POST['fio']) ? $_POST['fio'] : '';
     $number = isset($_POST['number']) ? $_POST['number'] : '';
@@ -39,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: ./');
         exit();
     }
-	// функция проверки полей
+	
     function check_field($cook, $str, $flag)
     {
         global $error;
@@ -57,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         setcookie($cook . '_value', $setval, time() + 30 * 24 * 60 * 60);
         return $res;
     }
-///ошибки
+
     if (!check_field('fio', 'Заполните поле', empty($fio)))
         check_field('fio', 'допустимы только русские буквы, формат: Имя Фамилия', !preg_match('/^([а-яё]+-?[а-яё]+)( [а-яё]+-?[а-яё]+){1,2}$/Diu', $fio));
     if (!check_field('number', 'Это поле пустое', empty($number))) {
@@ -110,11 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             foreach ($languages as $row)
                 $stmt1->execute([$_SESSION['form_id'], $row['id']]);
         } else {
-            $login = uniqid();//генерация рандом значения
+            $login = uniqid();
             $pass = uniqid();
             setcookie('login', $login);
             setcookie('pass', $pass);
-            $mpass = md5($pass);//хеш
+            $mpass = md5($pass);
             try {
                 $stmt = $db->prepare("INSERT INTO users (login, password) VALUES (?, ?)");
                 $stmt->execute([$login, $mpass]);
@@ -176,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return;
     }
 
-    // Выдаем сообщение об успешном сохранении.
+   
 	if (!empty($_COOKIE['save'])) {
         setcookie('save', '', 100000);
         setcookie('login', '', 100000);
@@ -197,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     check_field('check', $check);
 
     $languages = explode(',', $values['language']);
-	// вставка значений после авторизации 
+	
     if ($error && !empty($_SESSION['login'])) {
         try {
 			
