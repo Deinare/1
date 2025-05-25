@@ -1,5 +1,4 @@
 (function ($) {
-    // Сначала инициализируем слайдеры
     window.onload = function () {
         let start = false;
 
@@ -125,7 +124,6 @@ success: function(response) {
         $('.error').empty();
         $('.input').removeClass('red');
     } else {
-        // Очистка предыдущих ошибок
         $('.error').empty();
         $('.input').removeClass('red');
         
