@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Получение данных формы
     $fio = $_POST['fio'] ?? '';
     $number = $_POST['number'] ?? '';
     $email = $_POST['email'] ?? '';
@@ -41,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $bio = $_POST['bio'] ?? '';
     $check = $_POST['check'] ?? '';
 
-    // Валидация полей
     if (empty($fio)) {
         $response['errors']['fio'] = 'Заполните поле';
         $error = true;
@@ -127,7 +125,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 throw new Exception('Не удалось определить ID формы для обновления');
             }
 
-            // Проверяем существование записи перед обновлением
             $checkStmt = $db->prepare("SELECT id FROM dannye WHERE id = ? AND user_id = ?");
             $checkStmt->execute([$form_id, $_SESSION['user_id']]);
             
@@ -135,7 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 throw new Exception('Запись не найдена или нет прав доступа');
             }
 
-            // Обновляем основные данные
             $stmt = $db->prepare("UPDATE dannye SET fio = ?, number = ?, email = ?, dat = ?, radio = ?, bio = ? WHERE id = ?");
             $updateResult = $stmt->execute([$fio, $number, $email, $date, $radio, $bio, $form_id]);
             
@@ -143,7 +139,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 throw new Exception('Ошибка при обновлении основных данных');
             }
 
-            // Удаляем старые языки
             $deleteStmt = $db->prepare("DELETE FROM form_dannd_l WHERE id_form = ?");
             $deleteResult = $deleteStmt->execute([$form_id]);
             
@@ -151,7 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 throw new Exception('Ошибка при удалении старых языков');
             }
 
-            // Добавляем новые языки
             $insertStmt = $db->prepare("INSERT INTO form_dannd_l(id_form, id_lang) VALUES (?, ?)");
             foreach ($languages as $row) {
                 $insertResult = $insertStmt->execute([$form_id, $row['id']]);
