@@ -970,7 +970,7 @@ if (!empty($_SESSION['login']) && !empty($_SESSION['user_id'])) {
       
       <div>
          <label>
-            <input name="check" type="checkbox" <?php echo ($values['check'] != NULL) ? 'checked' : ''; ?>/>
+            <input name="check" type="checkbox" <?php echo ($log || $values['check'] != NULL) ? 'checked' : ''; ?>/>
               С контрактом ознакомлен(а)
           <div class="error"> <?php echo $messages['check']?> </div>
         </label>
